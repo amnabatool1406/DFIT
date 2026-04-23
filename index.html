@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForensicOS — Digital Investigation Tool</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-icon">🔍</span>
+    FORENSIC<span style="color:#fff">OS</span>
+  </div>
+  <div class="header-status">
+    <span class="status-dot"></span>SYSTEM ONLINE</span>
+    <span class="case-id">CASE #2024-DF-0047</span>
+    <span style="color:var(--accent)"> </span>
+    <span>2024-11-15 · 14:32:07</span>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">INVESTIGATION</div>
+      <div class="nav-item active" onclick="showPage('dashboard', this)">
+        <span class="nav-icon">⬡</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="showPage('evidence', this)">
+        <span class="nav-icon">📁</span> Evidence Files
+        <span class="badge">12</span>
+      </div>
+      <div class="nav-item" onclick="showPage('timeline', this)">
+        <span class="nav-icon">⏱</span> Timeline
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">ANALYSIS</div>
+      <div class="nav-item" onclick="showPage('hashing', this)">
+        <span class="nav-icon">🔐</span> File Hashing
+        <span class="badge green">OK</span>
+      </div>
+      <div class="nav-item" onclick="showPage('network', this)">
+        <span class="nav-icon">🌐</span> Network Map
+        <span class="badge">3</span>
+      </div>
+      <div class="nav-item" onclick="showPage('keywords', this)">
+        <span class="nav-icon">🔎</span> Keyword Search
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">REPORTS</div>
+      <div class="nav-item" onclick="showPage('report', this)">
+        <span class="nav-icon">📋</span> Generate Report
+      </div>
+      <div class="nav-item" onclick="showPage('chainofcustody', this)">
+        <span class="nav-icon">🔗</span> Chain of Custody
+      </div>
+    </div>
+
+    <div style="padding:16px; margin-top:auto;">
+      <div style="background:rgba(255,61,113,0.1); border:1px solid var(--accent2); padding:10px; border-radius:2px;">
+        <div style="font-family:'Share Tech Mono',monospace; font-size:9px; color:var(--accent2); letter-spacing:1px; margin-bottom:4px;">⚠ ALERT</div>
+        <div style="font-size:11px; color:#ddd;">3 flagged items require review</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-title">
+        <div>CASE DASHBOARD <div class="page-subtitle">OVERVIEW · CASE #2024-DF-0047 · Unauthorized Access Investigation</div></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="showPage('evidence', document.querySelector('.nav-item:nth-child(2)'))">+ ADD EVIDENCE</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card cyan">
+          <div class="stat-value">12</div>
+          <div class="stat-label">EVIDENCE FILES</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-value">3</div>
+          <div class="stat-label">FLAGGED ITEMS</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-value">8</div>
+          <div class="stat-label">HASHES VERIFIED</div>
+        </div>
+        <div class="stat-card warn">
+          <div class="stat-value">47</div>
+          <div class="stat-label">LOG EVENTS</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="panel">
+            <div class="panel-header">
+              <span>■ RECENT ACTIVITY</span>
+              <span style="color:var(--muted)">LAST 24H</span>
+            </div>
+            <div class="panel-body">
+              <div class="log-box">
+                <div class="log-line"><span class="log-time">14:31:55</span><span class="log-info">[INFO]</span><span>Evidence file IMG_004.jpg hashed (MD5)</span></div>
+                <div class="log-line"><span class="log-time">14:28:12</span><span class="log-warn">[WARN]</span><span>Metadata mismatch on document.docx</span></div>
+                <div class="log-line"><span class="log-time">14:15:40</span><span class="log-info">[INFO]</span><span>Timeline reconstructed — 47 events</span></div>
+                <div class="log-line"><span class="log-time">13:55:08</span><span class="log-error">[FLAG]</span><span>Keyword "exfil" found in chat_logs.txt</span></div>
+                <div class="log-line"><span class="log-time">13:42:30</span><span class="log-info">[INFO]</span><span>Network map: 3 external IPs identified</span></div>
+                <div class="log-line"><span class="log-time">13:30:01</span><span class="log-error">[FLAG]</span><span>File accessed outside business hours</span></div>
+                <div class="log-line"><span class="log-time">13:10:45</span><span class="log-warn">[WARN]</span><span>Deleted file recovered: secrets.zip</span></div>
+                <div class="log-line"><span class="log-time">12:58:22</span><span class="log-info">[INFO]</span><span>Case #2024-DF-0047 opened by SGT. HASSAN</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header"><span>■ FILE TYPE BREAKDOWN</span></div>
+            <div class="panel-body">
+              <div style="margin-bottom:12px;">
+                <div class="progress-row"><span class="progress-label">Images (.jpg, .png)</span><span class="progress-pct">5 files</span></div>
+                <div class="progress-bar"><div class="progress-fill cyan" style="width:42%"></div></div>
+              </div>
+              <div style="margin-bottom:12px;">
+                <div class="progress-row"><span class="progress-label">Documents (.docx, .pdf)</span><span class="progress-pct">3 files</span></div>
+                <div class="progress-bar"><div class="progress-fill green" style="width:25%"></div></div>
+              </div>
+              <div style="margin-bottom:12px;">
+                <div class="progress-row"><span class="progress-label">Logs (.txt, .log)</span><span class="progress-pct">3 files</span></div>
+                <div class="progress-bar"><div class="progress-fill warn" style="width:25%"></div></div>
+              </div>
+              <div>
+                <div class="progress-row"><span class="progress-label">Archives (.zip, .rar)</span><span class="progress-pct">1 file <span style="color:var(--accent2)">FLAGGED</span></span></div>
+                <div class="progress-bar"><div class="progress-fill red" style="width:8%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="panel">
+            <div class="panel-header"><span>■ CASE INFORMATION</span></div>
+            <div class="panel-body" style="font-size:12px; line-height:2;">
+              <table style="width:100%; font-family:'Share Tech Mono',monospace; font-size:11px;">
+                <tr><td style="color:var(--muted); width:130px;">CASE NUMBER</td><td style="color:var(--accent)">#2024-DF-0047</td></tr>
+                <tr><td style="color:var(--muted)">TYPE</td><td>Unauthorized System Access</td></tr>
+                <tr><td style="color:var(--muted)">DATE OPENED</td><td>2024-11-15</td></tr>
+                <tr><td style="color:var(--muted)">INVESTIGATOR</td><td>SGT. HASSAN</td></tr>
+                <tr><td style="color:var(--muted)">STATUS</td><td><span class="tag tag-warn">IN PROGRESS</span></td></tr>
+                <tr><td style="color:var(--muted)">PRIORITY</td><td><span class="tag tag-red">HIGH</span></td></tr>
+                <tr><td style="color:var(--muted)">TAGS</td><td><span class="tag tag-cyan">CYBERCRIME</span><span class="tag tag-cyan">INSIDER THREAT</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header"><span>■ SUSPECT PROFILE</span></div>
+            <div class="panel-body">
+              <div style="display:flex; align-items:center; gap:14px; margin-bottom:14px;">
+                <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,61,113,0.15);border:2px solid var(--accent2);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">👤</div>
+                <div>
+                  <div style="font-weight:700; font-size:15px;">UNKNOWN USER</div>
+                  <div style="font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--muted);">IP: 192.168.1.47 · Last Seen: 2024-11-14</div>
+                  <span class="tag tag-red">SUSPECT</span>
+                </div>
+              </div>
+              <div style="font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--muted); line-height:1.8;">
+                <div>ACCESS TIMES: <span style="color:var(--warn)">02:14 - 03:47 AM</span></div>
+                <div>FILES ACCESSED: <span style="color:var(--accent2)">14 files (incl. classified)</span></div>
+                <div>EXFIL ATTEMPT: <span style="color:var(--accent2)">DETECTED via FTP</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVIDENCE FILES -->
+    <div class="page" id="page-evidence">
+      <div class="page-title">
+        <div>EVIDENCE FILES <div class="page-subtitle">12 FILES · 8 VERIFIED · 3 FLAGGED</div></div>
+        <div class="btn-row">
+          <button class="btn btn-primary">⬆ UPLOAD FILE</button>
+          <button class="btn btn-danger">🗑 CLEAR FLAGGED</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span>■ UPLOAD EVIDENCE</span></div>
+        <div class="panel-body">
+          <div class="upload-zone">
+            <div class="upload-icon">📂</div>
+            <div class="upload-text">Drag & drop files here or click to browse<br><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--muted);">Supports: .jpg .png .docx .pdf .txt .log .zip .pcap .img</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span>■ EVIDENCE CATALOG</span></div>
+        <div class="panel-body">
+          <div class="file-grid">
+            <div class="file-card">
+              <div class="file-icon">🖼️</div>
+              <div class="file-name">screenshot_001.png</div>
+              <div class="file-size">2.4 MB</div>
+              <div><span class="tag tag-green">VERIFIED</span></div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">🖼️</div>
+              <div class="file-name">desktop_capture.jpg</div>
+              <div class="file-size">1.8 MB</div>
+              <div><span class="tag tag-green">VERIFIED</span></div>
+            </div>
+            <div class="file-card flagged">
+              <div class="file-icon">📄</div>
+              <div class="file-name">document.docx</div>
+              <div class="file-size">840 KB</div>
+              <div><span class="tag tag-red">FLAGGED</span></div>
+              <div class="file-flag">⚠ METADATA MISMATCH</div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">📋</div>
+              <div class="file-name">access_log.txt</div>
+              <div class="file-size">128 KB</div>
+              <div><span class="tag tag-green">VERIFIED</span></div>
+            </div>
+            <div class="file-card flagged">
+              <div class="file-icon">🗜️</div>
+              <div class="file-name">secrets.zip</div>
+              <div class="file-size">56 MB</div>
+              <div><span class="tag tag-red">FLAGGED</span></div>
+              <div class="file-flag">⚠ RECOVERED (DELETED)</div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">📊</div>
+              <div class="file-name">network_dump.pcap</div>
+              <div class="file-size">12.3 MB</div>
+              <div><span class="tag tag-cyan">ANALYZING</span></div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">📋</div>
+              <div class="file-name">chat_logs.txt</div>
+              <div class="file-size">34 KB</div>
+              <div><span class="tag tag-red">FLAGGED</span></div>
+              <div class="file-flag">⚠ KEYWORD HIT</div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">🖼️</div>
+              <div class="file-name">IMG_004.jpg</div>
+              <div class="file-size">3.1 MB</div>
+              <div><span class="tag tag-green">VERIFIED</span></div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">📄</div>
+              <div class="file-name">email_export.pdf</div>
+              <div class="file-size">1.2 MB</div>
+              <div><span class="tag tag-green">VERIFIED</span></div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">💾</div>
+              <div class="file-name">disk_image.img</div>
+              <div class="file-size">4.7 GB</div>
+              <div><span class="tag tag-cyan">PENDING</span></div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">📋</div>
+              <div class="file-name">system_log.log</div>
+              <div class="file-size">245 KB</div>
+              <div><span class="tag tag-green">VERIFIED</span></div>
+            </div>
+            <div class="file-card">
+              <div class="file-icon">📊</div>
+              <div class="file-name">registry_dump.reg</div>
+              <div class="file-size">18 KB</div>
+              <div><span class="tag tag-green">VERIFIED</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="page" id="page-timeline">
+      <div class="page-title">
+        <div>EVENT TIMELINE <div class="page-subtitle">47 EVENTS RECONSTRUCTED · 2024-11-13 TO 2024-11-15</div></div>
+        <button class="btn btn-primary">⬇ EXPORT TIMELINE</button>
+      </div>
+
+      <div class="panel scan-effect">
+        <div class="panel-header">
+          <span>■ CHRONOLOGICAL RECONSTRUCTION</span>
+          <span style="color:var(--muted)">SORTED: OLDEST → NEWEST</span>
+        </div>
+        <div class="panel-body">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="tl-time">2024-11-13<br>22:47:03</div>
+              <div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div>
+              <div class="tl-content">
+                <div class="tl-event">First anomalous login detected</div>
+                <div class="tl-meta">User: admin | IP: 192.168.1.47 | Source: internal network</div>
+                <div><span class="tag tag-warn">AFTER HOURS</span></div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="tl-time">2024-11-13<br>22:51:18</div>
+              <div class="tl-line"><div class="tl-dot warn"></div><div class="tl-connector"></div></div>
+              <div class="tl-content">
+                <div class="tl-event">Privilege escalation attempt</div>
+                <div class="tl-meta">sudo -s executed on WORKSTATION-07</div>
+                <div><span class="tag tag-warn">SUSPICIOUS</span></div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="tl-time">2024-11-13<br>23:04:55</div>
+              <div class="tl-line"><div class="tl-dot red"></div><div class="tl-connector"></div></div>
+              <div class="tl-content">
+                <div class="tl-event">Classified directory accessed: /data/hr/contracts/</div>
+                <div class="tl-meta">14 files read | Duration: 8 min 12 sec</div>
+                <div><span class="tag tag-red">CRITICAL</span></div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="tl-time">2024-11-13<br>23:15:29</div>
+              <div class="tl-line"><div class="tl-dot red"></div><div class="tl-connector"></div></div>
+              <div class="tl-content">
+                <div class="tl-event">File compression: secrets.zip created</div>
+                <div class="tl-meta">zip -r secrets.zip /data/hr/contracts/ — size: 56 MB</div>
+                <div><span class="tag tag-red">EXFIL PREP</span><span class="tag tag-red">FLAGGED</span></div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="tl-time">2024-11-13<br>23:22:10</div>
+              <div class="tl-line"><div class="tl-dot red"></div><div class="tl-connector"></div></div>
+              <div class="tl-content">
+                <div class="tl-event">FTP upload attempt to external server</div>
+                <div class="tl-meta">Destination: 45.33.32.156:21 (BLOCKED by firewall)</div>
+                <div><span class="tag tag-red">BLOCKED</span><span class="tag tag-warn">EXTERNAL IP</span></div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="tl-time">2024-11-13<br>23:28:44</div>
+              <div class="tl-line"><div class="tl-dot warn"></div><div class="tl-connector"></div></div>
+              <div class="tl-content">
+                <div class="tl-event">Log deletion attempted</div>
+                <div class="tl-meta">rm /var/log/auth.log — partially successful (backup retained)</div>
+                <div><span class="tag tag-warn">ANTI-FORENSIC</span></div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="tl-time">2024-11-13<br>23:35:01</div>
+              <div class="tl-line"><div class="tl-dot warn"></div><div class="tl-connector"></div></div>
+              <div class="tl-content">
+                <div class="tl-event">secrets.zip deleted from disk</div>
+                <div class="tl-meta">File marked as deleted — recovered via file carving</div>
+                <div><span class="tag tag-green">RECOVERED</span></div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="tl-time">2024-11-13<br>23:47:22</div>
+              <div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div>
+              <div class="tl-content">
+                <div class="tl-event">Session terminated — logout</div>
+                <div class="tl-meta">Total session: 1 hour 00 min 19 sec</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="tl-time">2024-11-15<br>09:12:05</div>
+              <div class="tl-line"><div class="tl-dot green"></div><div class="tl-connector"></div></div>
+              <div class="tl-content">
+                <div class="tl-event">Incident reported by IT security team</div>
+                <div class="tl-meta">Ticket #INC-7892 opened | Forensic investigation initiated</div>
+                <div><span class="tag tag-green">INVESTIGATION START</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILE HASHING -->
+    <div class="page" id="page-hashing">
+      <div class="page-title">
+        <div>FILE INTEGRITY & HASHING <div class="page-subtitle">MD5 · SHA-1 · SHA-256 · VERIFICATION</div></div>
+        <button class="btn btn-primary">↻ RE-VERIFY ALL</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span>■ HASH VERIFICATION TABLE</span><span style="color:var(--accent3)">8/12 VERIFIED</span></div>
+        <div class="panel-body" style="padding:0;">
+          <table class="hash-table" style="width:100%;">
+            <thead>
+              <tr>
+                <th>FILENAME</th>
+                <th>MD5 HASH</th>
+                <th>SHA-256</th>
+                <th>ORIGINAL MATCH</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>screenshot_001.png</td>
+                <td class="hash-val">a3f2e1b8c4d9...</td>
+                <td class="hash-val">e3b0c44298fc1c14...</td>
+                <td class="match-ok">✓ MATCH</td>
+                <td><span class="tag tag-green">INTACT</span></td>
+              </tr>
+              <tr>
+                <td>access_log.txt</td>
+                <td class="hash-val">9d8c7b6a5f4e...</td>
+                <td class="hash-val">2cf24dba5fb0a30e...</td>
+                <td class="match-ok">✓ MATCH</td>
+                <td><span class="tag tag-green">INTACT</span></td>
+              </tr>
+              <tr>
+                <td>document.docx</td>
+                <td class="hash-val">1a2b3c4d5e6f...</td>
+                <td class="hash-val">ba7816bf8f01cfea...</td>
+                <td class="match-fail">✗ MISMATCH</td>
+                <td><span class="tag tag-red">MODIFIED</span></td>
+              </tr>
+              <tr>
+                <td>chat_logs.txt</td>
+                <td class="hash-val">f6e5d4c3b2a1...</td>
+                <td class="hash-val">9f86d081884c7d65...</td>
+                <td class="match-ok">✓ MATCH</td>
+                <td><span class="tag tag-green">INTACT</span></td>
+              </tr>
+              <tr>
+                <td>secrets.zip</td>
+                <td class="hash-val">—</td>
+                <td class="hash-val">—</td>
+                <td class="match-warn">? RECOVERED</td>
+                <td><span class="tag tag-warn">NO BASELINE</span></td>
+              </tr>
+              <tr>
+                <td>network_dump.pcap</td>
+                <td class="hash-val">c1d2e3f4a5b6...</td>
+                <td class="hash-val">4e07408562be...</td>
+                <td class="match-ok">✓ MATCH</td>
+                <td><span class="tag tag-green">INTACT</span></td>
+              </tr>
+              <tr>
+                <td>email_export.pdf</td>
+                <td class="hash-val">b9a8c7d6e5f4...</td>
+                <td class="hash-val">6b86b273ff34fc...</td>
+                <td class="match-ok">✓ MATCH</td>
+                <td><span class="tag tag-green">INTACT</span></td>
+              </tr>
+              <tr>
+                <td>disk_image.img</td>
+                <td class="hash-val">—</td>
+                <td class="hash-val">COMPUTING...</td>
+                <td class="match-warn">⏳ PENDING</td>
+                <td><span class="tag tag-cyan">IN PROGRESS</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- NETWORK MAP -->
+    <div class="page" id="page-network">
+      <div class="page-title">
+        <div>NETWORK ANALYSIS <div class="page-subtitle">CONNECTION MAP · 3 EXTERNAL IPs · PACKET ANALYSIS</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span>■ CONNECTION MAP</span><span style="color:var(--accent2)">3 SUSPICIOUS CONNECTIONS</span></div>
+        <div class="panel-body">
+          <div class="net-canvas scan-effect" id="netmap">
+            <!-- Nodes positioned manually -->
+            <div class="net-node suspect" style="left:50%;top:50%;transform:translate(-50%,-50%);">👤</div>
+            <div class="net-node device" style="left:15%;top:30%;">💻</div>
+            <div class="net-node device" style="left:15%;top:65%;">🖥️</div>
+            <div class="net-node server" style="left:78%;top:20%;">🖧</div>
+            <div class="net-node server" style="left:82%;top:55%;">🌐</div>
+            <div class="net-node server" style="left:75%;top:80%;">⚠️</div>
+            <div class="net-label" style="left:15%;top:82%;">WORKSTATION-07</div>
+            <div class="net-label" style="left:78%;top:10%;">FILESERVER-01</div>
+            <div class="net-label" style="left:82%;top:68%;">45.33.32.156<br><span style="color:var(--accent2)">EXTERNAL</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header"><span>■ TOP CONNECTIONS</span></div>
+          <div class="panel-body" style="padding:0;">
+            <table class="hash-table">
+              <thead><tr><th>SOURCE IP</th><th>DEST IP</th><th>PORT</th><th>PACKETS</th><th>FLAG</th></tr></thead>
+              <tbody>
+                <tr><td>192.168.1.47</td><td>192.168.1.10</td><td>445</td><td style="color:var(--text)">1,204</td><td><span class="tag tag-warn">SMB</span></td></tr>
+                <tr><td>192.168.1.47</td><td>45.33.32.156</td><td>21</td><td style="color:var(--accent2)">847</td><td><span class="tag tag-red">BLOCKED</span></td></tr>
+                <tr><td>192.168.1.47</td><td>8.8.8.8</td><td>53</td><td style="color:var(--text)">312</td><td><span class="tag tag-cyan">DNS</span></td></tr>
+                <tr><td>192.168.1.47</td><td>104.21.0.1</td><td>443</td><td style="color:var(--warn)">56</td><td><span class="tag tag-warn">HTTPS</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span>■ PROTOCOL BREAKDOWN</span></div>
+          <div class="panel-body">
+            <div style="margin-bottom:12px;">
+              <div class="progress-row"><span class="progress-label">SMB (File Sharing)</span><span class="progress-pct">49%</span></div>
+              <div class="progress-bar"><div class="progress-fill warn" style="width:49%"></div></div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div class="progress-row"><span class="progress-label">FTP (Blocked Exfil)</span><span class="progress-pct">34%</span></div>
+              <div class="progress-bar"><div class="progress-fill red" style="width:34%"></div></div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div class="progress-row"><span class="progress-label">DNS Queries</span><span class="progress-pct">12%</span></div>
+              <div class="progress-bar"><div class="progress-fill cyan" style="width:12%"></div></div>
+            </div>
+            <div>
+              <div class="progress-row"><span class="progress-label">HTTPS</span><span class="progress-pct">5%</span></div>
+              <div class="progress-bar"><div class="progress-fill green" style="width:5%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KEYWORD SEARCH -->
+    <div class="page" id="page-keywords">
+      <div class="page-title">
+        <div>KEYWORD SEARCH <div class="page-subtitle">SEARCH ACROSS ALL EVIDENCE FILES</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><span>■ SEARCH PARAMETERS</span></div>
+        <div class="panel-body">
+          <div style="display:flex; gap:10px; margin-bottom:12px;">
+            <input type="text" id="searchInput" value="exfil password credentials" style="flex:1; background:var(--panel2); border:1px solid var(--accent); color:var(--accent); padding:10px 14px; font-family:'Share Tech Mono',monospace; font-size:12px; border-radius:2px; outline:none;">
+            <button class="btn btn-primary" onclick="doSearch()">⚡ SEARCH</button>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span class="tag tag-red" style="cursor:pointer;" onclick="addKW('exfil')">+ exfil</span>
+            <span class="tag tag-red" style="cursor:pointer;" onclick="addKW('password')">+ password</span>
+            <span class="tag tag-warn" style="cursor:pointer;" onclick="addKW('delete')">+ delete</span>
+            <span class="tag tag-warn" style="cursor:pointer;" onclick="addKW('sudo')">+ sudo</span>
+            <span class="tag tag-cyan" style="cursor:pointer;" onclick="addKW('login')">+ login</span>
+            <span class="tag tag-cyan" style="cursor:pointer;" onclick="addKW('admin')">+ admin</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel" id="searchResults">
+        <div class="panel-header"><span>■ SEARCH RESULTS</span><span style="color:var(--muted)">4 HITS ACROSS 2 FILES</span></div>
+        <div class="panel-body">
+          <div style="margin-bottom:16px;">
+            <div style="font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--accent); margin-bottom:8px;">📋 chat_logs.txt — 3 hits</div>
+            <div class="log-box">
+              <div class="log-line" style="line-height:2.2;"><span class="log-time">Line 142:</span><span>user1: hey did you manage to <span class="keyword">exfil</span> the files before they noticed?</span></div>
+              <div class="log-line" style="line-height:2.2;"><span class="log-time">Line 156:</span><span>user1: use the <span class="keyword">password</span> admin123 to access the archive</span></div>
+              <div class="log-line" style="line-height:2.2;"><span class="log-time">Line 201:</span><span>user2: <span class="keyword">delete</span> the logs after you're done, they check them every morning</span></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--accent); margin-bottom:8px;">📋 access_log.txt — 1 hit</div>
+            <div class="log-box">
+              <div class="log-line" style="line-height:2.2;"><span class="log-time">Line 889:</span><span>[2024-11-13 23:22] FTP <span class="keyword">exfil</span> attempt detected from 192.168.1.47 → BLOCKED</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORT -->
+    <div class="page" id="page-report">
+      <div class="page-title">
+        <div>GENERATE REPORT <div class="page-subtitle">EXPORT FORENSIC REPORT FOR COURT / SUBMISSION</div></div>
+        <button class="btn btn-primary" onclick="alert('In a real app, this would generate a PDF report!')">📄 EXPORT PDF</button>
+      </div>
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header"><span>■ REPORT SETTINGS</span></div>
+          <div class="panel-body" style="font-size:13px; line-height:2.2;">
+            <div style="margin-bottom:8px;"><span style="color:var(--muted); font-size:11px; font-family:'Share Tech Mono',monospace;">REPORT TYPE</span></div>
+            <select style="width:100%; background:var(--panel2); border:1px solid var(--border); color:var(--text); padding:8px; font-family:'Share Tech Mono',monospace; font-size:11px; border-radius:2px; margin-bottom:12px; outline:none;">
+              <option>Full Forensic Investigation Report</option>
+              <option>Executive Summary</option>
+              <option>Timeline Only</option>
+              <option>Hash Verification Report</option>
+            </select>
+            <div style="display:flex; flex-direction:column; gap:6px; font-family:'Share Tech Mono',monospace; font-size:11px;">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" checked> Include Evidence Catalog</label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" checked> Include Timeline</label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" checked> Include Hash Verification</label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" checked> Include Network Analysis</label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox"> Include Raw Logs</label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" checked> Digital Signature / Timestamp</label>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span>■ REPORT PREVIEW</span></div>
+          <div class="panel-body">
+            <div style="background:#020c10; border:1px solid var(--border); padding:16px; font-family:'Share Tech Mono',monospace; font-size:10px; line-height:1.9; border-radius:2px;">
+              <div style="text-align:center; color:var(--accent); letter-spacing:2px; margin-bottom:12px; font-size:12px;">DIGITAL FORENSIC INVESTIGATION REPORT</div>
+              <div style="color:var(--muted);">══════════════════════════════════</div>
+              <div>CASE NO: <span style="color:var(--accent)">#2024-DF-0047</span></div>
+              <div>DATE: <span style="color:var(--text)">2024-11-15</span></div>
+              <div>INVESTIGATOR: <span style="color:var(--text)">SGT. HASSAN</span></div>
+              <div>SUBJECT: <span style="color:var(--text)">Unauthorized Access Investigation</span></div>
+              <div style="color:var(--muted);">══════════════════════════════════</div>
+              <div style="margin-top:6px; color:var(--muted);">EXECUTIVE SUMMARY:</div>
+              <div style="color:var(--text); margin-top:4px;">On 2024-11-13 at 22:47, anomalous access was detected originating from IP 192.168.1.47. Suspect accessed classified HR data directory, created an archive (secrets.zip, 56MB), and attempted FTP exfiltration to external IP 45.33.32.156 (blocked by firewall). Anti-forensic activity observed. 12 evidence items collected.</div>
+              <div style="margin-top:8px; color:var(--accent2);">STATUS: 3 FLAGGED ITEMS — RECOMMEND IMMEDIATE ACTION</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAIN OF CUSTODY -->
+    <div class="page" id="page-chainofcustody">
+      <div class="page-title">
+        <div>CHAIN OF CUSTODY <div class="page-subtitle">EVIDENCE HANDLING LOG · TAMPER-EVIDENT RECORD</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><span>■ CUSTODY RECORD</span></div>
+        <div class="panel-body" style="padding:0;">
+          <table class="hash-table">
+            <thead><tr><th>#</th><th>EVIDENCE ITEM</th><th>FROM</th><th>TO</th><th>DATE/TIME</th><th>PURPOSE</th><th>HASH CHECK</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--muted)">001</td><td>disk_image.img</td><td>Crime Scene</td><td>SGT. HASSAN</td><td style="font-size:10px;">2024-11-15 09:30</td><td>Collection</td><td class="match-ok">✓</td></tr>
+              <tr><td style="color:var(--muted)">002</td><td>disk_image.img</td><td>SGT. HASSAN</td><td>Forensic Lab</td><td style="font-size:10px;">2024-11-15 10:15</td><td>Analysis</td><td class="match-ok">✓</td></tr>
+              <tr><td style="color:var(--muted)">003</td><td>chat_logs.txt</td><td>WORKSTATION-07</td><td>SGT. HASSAN</td><td style="font-size:10px;">2024-11-15 11:00</td><td>Collection</td><td class="match-ok">✓</td></tr>
+              <tr><td style="color:var(--muted)">004</td><td>secrets.zip</td><td>Disk Recovery</td><td>SGT. HASSAN</td><td style="font-size:10px;">2024-11-15 13:45</td><td>Recovery</td><td class="match-warn">?</td></tr>
+              <tr><td style="color:var(--muted)">005</td><td>document.docx</td><td>User Desktop</td><td>SGT. HASSAN</td><td style="font-size:10px;">2024-11-15 14:20</td><td>Collection</td><td class="match-fail">✗ MODIFIED</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div>
+      <div class="rp-title">◆ FLAGGED ITEMS</div>
+      <div class="evidence-item">
+        <div class="ev-label">DOCUMENT</div>
+        <div class="ev-val red">⚠ document.docx</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:3px;">Hash mismatch — possibly tampered</div>
+      </div>
+      <div class="evidence-item">
+        <div class="ev-label">ARCHIVE (RECOVERED)</div>
+        <div class="ev-val red">⚠ secrets.zip</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:3px;">Deleted file, recovered via carving</div>
+      </div>
+      <div class="evidence-item">
+        <div class="ev-label">CHAT LOG</div>
+        <div class="ev-val red">⚠ chat_logs.txt</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:3px;">Keyword hit: "exfil", "password"</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="rp-title">◆ KEY INDICATORS</div>
+      <div class="evidence-item">
+        <div class="ev-label">SUSPECT IP</div>
+        <div class="ev-val cyan">192.168.1.47</div>
+      </div>
+      <div class="evidence-item">
+        <div class="ev-label">EXTERNAL TARGET IP</div>
+        <div class="ev-val red">45.33.32.156</div>
+      </div>
+      <div class="evidence-item">
+        <div class="ev-label">INCIDENT WINDOW</div>
+        <div class="ev-val cyan">22:47 – 23:47</div>
+      </div>
+      <div class="evidence-item">
+        <div class="ev-label">ATTACK TYPE</div>
+        <div class="ev-val red">INSIDER THREAT</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="rp-title">◆ QUICK ACTIONS</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="btn btn-primary" style="width:100%;text-align:left;" onclick="showPage('hashing', null)">🔐 Run Hash Verification</button>
+        <button class="btn btn-primary" style="width:100%;text-align:left;" onclick="showPage('timeline', null)">⏱ View Full Timeline</button>
+        <button class="btn btn-primary" style="width:100%;text-align:left;" onclick="showPage('report', null)">📄 Generate Report</button>
+        <button class="btn btn-danger" style="width:100%;text-align:left;">🔒 Lock Case</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
